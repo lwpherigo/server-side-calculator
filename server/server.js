@@ -7,8 +7,6 @@ app.use(express.static('server/public'));
 app.use(bodyParser.urlencoded({extended}));
 app.use(bodyParser.json());
 
-// HERE IS EVERYTHING FOR THE SERVER!
-
 const history = [];
 
 app.get('/history', (req, res) => {
@@ -36,9 +34,7 @@ app.post('/equation', (req, res) => {
         answer: answer,
     });
     res.sendStatus(201);
-})
-
-// OKAY NOW IT'S GONNA LISTEN
+});
 
 app.listen(PORT, () => {
     console.log(`Listening on port: ${PORT}`);
