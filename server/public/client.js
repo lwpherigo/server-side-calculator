@@ -2,7 +2,6 @@ console.log('js');
 
 $(document).ready(init);
 
-const history = [];
 let operator = 'nothing';
 
 function init() {
@@ -56,27 +55,41 @@ function postProblem(inputs) {
         url: '/equation',
         data: data,
     })
-    .then(function(response) {
-        console.log('POST Response: ', response);
-        history.push(response);
-        render(response);
+    .then(function() {
+        $.ajax({
+            method: 'GET',
+            url: '/history',
+        })
+        postHistory();
     })
     .catch(function(err) {
         console.log('POST Error: ', err);
     })
 }
 
+function postHistory() {
+    $.ajax({
+        method: 'GET',
+        url: '/history',
+    })
+    .then(function(response) {
+        render(response);
+    })
+    .catch(function(err) {
+        console.log(err);
+    });
+}
+
 function render(math) {
     const $history = $('.js-eq-history');
-
     $history.empty();
+
     for(i = 0; i < history.length; i++) {
         $history.append(`
         <li>
             ${math.problem} = ${math.answer}
         </li>
-    `)
-    }
+    `)}
     
 }
 
