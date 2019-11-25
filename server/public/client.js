@@ -2,6 +2,9 @@ console.log('js');
 
 $(document).ready(init);
 
+const history = [];
+let operator = 'nothing';
+
 function init() {
     console.log('DOM is totally ready.')
     $('.js-btn-divide').on('click', divideButton);
@@ -33,13 +36,48 @@ function grabEquation() {
     let valueOne = $inputOne.val();
     const $inputThree = $('.js-valueThree');
     let valueThree = $inputThree.val();
-    let add = $('.js-btn-add');
 
     const mathProblem = {
         val1: valueOne,
-        val2: valueTwo,
+        val2: operator,
         val3: valueThree,
     }
+
+    postProblem(mathProblem);
+}
+
+function postProblem(inputs) {
+    const data = {
+        problem: inputs,
+    };
+    console.log('POST Deposit: ', data);
+    $.ajax({
+        method: 'POST',
+        url: '/equation',
+        data: data,
+    })
+    .then(function(response) {
+        console.log('POST Response: ', response);
+        history.push(response);
+        render(response);
+    })
+    .catch(function(err) {
+        console.log('POST Error: ', err);
+    })
+}
+
+function render(math) {
+    const $history = $('.js-eq-history');
+
+    $history.empty();
+    for(i = 0; i < history.length; i++) {
+        $history.append(`
+        <li>
+            ${math.problem} = ${math.answer}
+        </li>
+    `)
+    }
+    
 }
 
 function clearInputs() {
